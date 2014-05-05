@@ -568,7 +568,7 @@ void edge_pushing_pre_s(short           tnum,
         }//switch
 #ifdef NO_PRE_ACC
         if (info->r!=NULLLOC){
-//edge_check_info(info);
+edge_check_info(info);
 //pushing
             compute_pushing(tl,tp,tw,info,graph);
 //creating

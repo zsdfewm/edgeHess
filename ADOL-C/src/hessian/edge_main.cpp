@@ -9,9 +9,11 @@
 #include <adolc/hessian/edge_uni5_push.h>
 
 
-#define ADD_INC_EDGE_COUNT	if (edge_is_local==0) { local_inc_edge_count++;} else {global_inc_edge_count++;}
-
 using namespace std;
+
+int __edge_is_local=1;
+int __edge_global_count=0;
+int __edge_local_count=0;
 
 int __edge_is_symmetric__=1;
 
@@ -75,7 +77,8 @@ int edge_hess(
         fprintf(stderr, "Preaccumulation in Hessian must be enabled WITH --enable-preacc when configure\n");
 #endif
     }
-
+    printf("edge_local_count=%d\n",__edge_local_count);
+    printf("edge_globl_count=%d\n",__edge_global_count);
 //Step 3: retrive results
     edge_retrive(graph,indmap,nnz,rind,cind,values);
     delete[] indmap;

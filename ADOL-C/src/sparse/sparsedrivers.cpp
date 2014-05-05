@@ -470,9 +470,12 @@ int sparse_hess(
 	  {
 	    sHinfos.HP    = (unsigned int **) malloc(indep*sizeof(unsigned int *));
 
+printf("About to compute Hessian pattern.....");
+fflush(stdout);
 	    /* generate sparsity pattern */
 	    ret_val = hess_pat(tag, indep, basepoint, sHinfos.HP, options[0]);
-
+printf("done\n");
+fflush(stdout);
 	    if (ret_val < 0) {
 	      printf(" ADOL-C error in sparse_hess() \n");
 	      return ret_val;
@@ -488,6 +491,8 @@ int sparse_hess(
             }
 	    deepcopy_HP(&sHinfos.HP,ADOLC_CURRENT_TAPE_INFOS.pTapeInfos.sHinfos.HP,indep);	    
 	  }
+printf("hessian pattern done\n");
+fflush(stdout);
 
 	sHinfos.indep = indep;
 	sHinfos.nnz_in = 0;
@@ -513,6 +518,9 @@ int sparse_hess(
 	else
 	  g->GenerateSeedHessian(&Seed, &dummy, &sHinfos.p, 
 		  	         "SMALLEST_LAST","STAR"); 
+
+printf("compute seed matrix done\n");
+fflush(stdout);
 
        	sHinfos.Hcomp = myalloc2(indep,sHinfos.p);
         sHinfos.Xppp = myalloc3(indep,sHinfos.p,1);
@@ -607,6 +615,9 @@ int sparse_hess(
     myfree1(w);
     myfree2(X);   
 
+
+printf("evaluate compressed hessian done\n");
+fflush(stdout);
 
     /* recover compressed Hessian => ColPack library */
 

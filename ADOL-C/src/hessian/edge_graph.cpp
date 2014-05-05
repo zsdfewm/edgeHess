@@ -8,23 +8,33 @@
 #include <adolc/hessian/edge_main.h>
 #include <adolc/adolc.h>
 
+#define ADD_EDGE_COUNT  if (__edge_is_local==1) {__edge_local_count++;} else {__edge_global_count++;}
+
 extern int __edge_is_symmetric__;
+extern int __edge_global_count;
+extern int __edge_local_count;
+extern int __edge_is_local;
 
 void increase_edge(locint i, locint j, double w, map<locint, map<locint, double> > *graph){
     if (__edge_is_symmetric__==0){
         if (i!=j){
+            ADD_EDGE_COUNT
             (*graph)[i][j]+=w;
+            ADD_EDGE_COUNT
             (*graph)[j][i]+=w;
         }
         else{
+            ADD_EDGE_COUNT
             (*graph)[i][j]+=w;
         }
     }
     else{
         if (i>=j){
+            ADD_EDGE_COUNT
             (*graph)[i][j]+=w;
         }
         else{
+            ADD_EDGE_COUNT
             (*graph)[j][i]+=w;
         }
     }
@@ -132,6 +142,7 @@ void compute_adjoints(derivative_info* ri, map<locint, double> *Adjoints){
 
 #ifdef PREACC
 void compute_global_pushing(unsigned int tl, locint *tp, double *tw, locint r, map<locint, double> *first, map<locint, map<locint, double> > *gGraph){
+__edge_is_local=0;
     unsigned int i,j;
     map<locint, double> *edges;
     locint p;
@@ -173,9 +184,13 @@ void compute_global_pushing(unsigned int tl, locint *tp, double *tw, locint r, m
             }
         }
     }
+__edge_is_local=1;
 }
 
 void compute_global_creating(locint r, map<locint, map<locint, double> > *second, map<locint, double> *Adjoints, map<locint, map<locint, double> > *gGraph){
+
+__edge_is_local=0;
+
     locint x,y;
     double w;
     double a=(*Adjoints)[r];
@@ -191,6 +206,9 @@ void compute_global_creating(locint r, map<locint, map<locint, double> > *second
             }
         }
     }
+
+__edge_is_local=1;
+
 }
 
 void compute_global_adjoints(locint r, map<locint, double> *first, map<locint, double> *Adjoints){
